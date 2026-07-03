@@ -7,6 +7,9 @@
 ## 从这里开始
 
 - [完整项目需求与学习路线](./docs/REACT_PRACTICE_ROADMAP.md)
+- [Sprint 0 学习记录](./docs/learning-notes/00-baseline.md)
+- [前端技术栈 ADR](./docs/decisions/0001-frontend-stack.md)
+- [贡献指南](./CONTRIBUTING.md)
 
 当前阶段：**Sprint 0 — 工程初始化与第一个可交付页面**。
 
