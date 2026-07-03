@@ -1,0 +1,75 @@
+.app-shell {
+  min-height: 100vh;
+}
+
+.app-shell__sider {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: auto;
+}
+
+.app-shell__brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 64px;
+  padding: 0 20px;
+  color: #ffffff;
+}
+
+.app-shell__brand-mark {
+  display: inline-grid;
+  width: 32px;
+  height: 32px;
+  place-items: center;
+  border-radius: 6px;
+  background: #2563eb;
+  font-weight: 800;
+}
+
+.app-shell__brand-name {
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.app-shell__menu {
+  border-inline-end: 0;
+}
+
+.app-shell__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 72px;
+  padding: 0 24px;
+  background: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.app-shell__title {
+  display: block;
+  margin: 2px 0 0;
+}
+
+.app-shell__avatar {
+  background: #0f172a;
+}
+
+.app-shell__content {
+  padding: 24px;
+}
+
+@media (max-width: 575px) {
+  .app-shell__header {
+    height: auto;
+    min-height: 72px;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 16px;
+  }
+
+  .app-shell__content {
+    padding: 16px;
+  }
+}

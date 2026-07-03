@@ -10,3 +10,19 @@
 
 当前阶段：**Sprint 0 — 工程初始化与第一个可交付页面**。
 
+## 本地开发
+
+```bash
+pnpm install
+pnpm dev
+```
+
+常用脚本：
+
+```bash
+pnpm typecheck
+pnpm lint
+pnpm test
+pnpm build
+pnpm e2e
+```

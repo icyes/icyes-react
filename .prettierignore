@@ -1,0 +1,7 @@
+node_modules
+dist
+coverage
+playwright-report
+test-results
+pnpm-lock.yaml
+docs/REACT_PRACTICE_ROADMAP.md
