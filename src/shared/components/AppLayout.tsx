@@ -1,4 +1,5 @@
 import {
+  LockOutlined,
   DashboardOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
@@ -26,11 +27,17 @@ const menuItems: MenuProps['items'] = [
     icon: <UnorderedListOutlined />,
     label: <Link to="/tickets">工单列表</Link>,
   },
+  {
+    key: '/403',
+    icon: <LockOutlined />,
+    label: <Link to="/403">权限示例</Link>,
+  },
 ]
 
 const routeTitles = new Map([
   ['/', '仪表盘'],
   ['/tickets', '工单列表'],
+  ['/403', '无权访问'],
 ])
 
 export function AppLayout() {
@@ -39,6 +46,7 @@ export function AppLayout() {
   const location = useLocation()
   const selectedKey = routeTitles.has(location.pathname) ? location.pathname : '/'
   const pageTitle = routeTitles.get(location.pathname) ?? '页面不存在'
+  const isDesktop = screens.lg !== false
 
   const breadcrumbItems = useMemo(
     () => [
@@ -60,6 +68,9 @@ export function AppLayout() {
         collapsedWidth={screens.lg ? 72 : 0}
         collapsible
         collapsed={collapsed}
+        onBreakpoint={(broken) => {
+          setCollapsed(broken)
+        }}
         trigger={null}
       >
         <Link className="app-shell__brand" to="/" aria-label="PulseOps 首页">
@@ -72,6 +83,11 @@ export function AppLayout() {
           theme="dark"
           items={menuItems}
           selectedKeys={[selectedKey]}
+          onClick={() => {
+            if (!isDesktop) {
+              setCollapsed(true)
+            }
+          }}
         />
       </Sider>
       <Layout>

@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { describe, expect, it } from 'vitest'
 
 import { App } from './App'
@@ -8,7 +9,17 @@ describe('App', () => {
     render(<App />)
 
     expect(await screen.findByRole('link', { name: 'PulseOps 首页' })).toBeInTheDocument()
-    expect(screen.getByRole('heading', { name: '团队工作台' })).toBeInTheDocument()
-    expect(screen.getByText('最近工单')).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { name: '团队工作台' })).toBeInTheDocument()
+    expect(await screen.findByText('最近工单')).toBeInTheDocument()
+  })
+
+  it('navigates to the tickets placeholder page', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+
+    await user.click(await screen.findByRole('link', { name: '工单列表' }))
+
+    expect(await screen.findByRole('heading', { name: '工单列表' })).toBeInTheDocument()
+    expect(screen.getByPlaceholderText('搜索标题或编号')).toBeInTheDocument()
   })
 })
