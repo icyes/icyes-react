@@ -1,15 +1,18 @@
 import {
-  LockOutlined,
   DashboardOutlined,
+  DownOutlined,
+  LockOutlined,
+  LogoutOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   SettingOutlined,
+  UserOutlined,
   UnorderedListOutlined,
 } from '@ant-design/icons'
-import { Avatar, Breadcrumb, Button, Grid, Layout, Menu, Space, Typography } from 'antd'
+import { Avatar, Breadcrumb, Button, Dropdown, Grid, Layout, Menu, Space, Typography } from 'antd'
 import type { MenuProps } from 'antd'
 import { useMemo, useState } from 'react'
-import { Link, Outlet, useLocation } from 'react-router-dom'
+import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom'
 
 import './AppLayout.css'
 
@@ -40,10 +43,29 @@ const routeTitles = new Map([
   ['/403', '无权访问'],
 ])
 
+const accountMenuItems: MenuProps['items'] = [
+  {
+    key: 'profile',
+    icon: <UserOutlined />,
+    label: '个人资料',
+    disabled: true,
+  },
+  {
+    type: 'divider',
+  },
+  {
+    key: 'logout',
+    icon: <LogoutOutlined />,
+    label: '退出登录',
+    danger: true,
+  },
+]
+
 export function AppLayout() {
   const [collapsed, setCollapsed] = useState(false)
   const screens = Grid.useBreakpoint()
   const location = useLocation()
+  const navigate = useNavigate()
   const selectedKey = routeTitles.has(location.pathname) ? location.pathname : '/'
   const pageTitle = routeTitles.get(location.pathname) ?? '页面不存在'
   const isDesktop = screens.lg !== false
@@ -59,6 +81,16 @@ export function AppLayout() {
     ],
     [pageTitle],
   )
+
+  const handleAccountMenuClick: MenuProps['onClick'] = ({ key }) => {
+    if (key !== 'logout') {
+      return
+    }
+
+    localStorage.removeItem('pulseops_token')
+    sessionStorage.removeItem('pulseops_token')
+    void navigate('/login', { replace: true })
+  }
 
   return (
     <Layout className="app-shell">
@@ -106,10 +138,22 @@ export function AppLayout() {
               </Text>
             </div>
           </Space>
-          <Space size={12}>
+          <Space size={8}>
             <Button type="text" icon={<SettingOutlined />} aria-label="系统设置" />
-            <Avatar className="app-shell__avatar">K</Avatar>
-            <Text strong>管理员</Text>
+            <Dropdown
+              menu={{ items: accountMenuItems, onClick: handleAccountMenuClick }}
+              placement="bottomRight"
+              trigger={['click']}
+            >
+              <Button type="text" className="app-shell__account" aria-label="打开账号菜单">
+                <Avatar className="app-shell__avatar">K</Avatar>
+                <span className="app-shell__account-info">
+                  <Text strong>管理员</Text>
+                  <Text type="secondary">系统管理员</Text>
+                </span>
+                <DownOutlined className="app-shell__account-arrow" />
+              </Button>
+            </Dropdown>
           </Space>
         </Header>
         <Content className="app-shell__content">

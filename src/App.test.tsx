@@ -22,4 +22,14 @@ describe('App', () => {
     expect(await screen.findByRole('heading', { name: '工单列表' })).toBeInTheDocument()
     expect(screen.getByPlaceholderText('搜索标题或编号')).toBeInTheDocument()
   })
+
+  it('logs out from the account dropdown', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+
+    await user.click(await screen.findByRole('button', { name: '打开账号菜单' }))
+    await user.click(await screen.findByText('退出登录'))
+
+    expect(await screen.findByRole('heading', { name: '登录你的账号' })).toBeInTheDocument()
+  })
 })

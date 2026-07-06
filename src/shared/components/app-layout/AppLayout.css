@@ -56,6 +56,29 @@
   background: #0f172a;
 }
 
+.app-shell__account {
+  display: flex;
+  height: 52px;
+  align-items: center;
+  gap: 10px;
+  padding: 5px 8px;
+}
+
+.app-shell__account-info {
+  display: grid;
+  line-height: 1.25;
+  text-align: left;
+}
+
+.app-shell__account-info .ant-typography:last-child {
+  font-size: 12px;
+}
+
+.app-shell__account-arrow {
+  color: #8a94a6;
+  font-size: 10px;
+}
+
 .app-shell__content {
   padding: 24px;
 }
@@ -71,5 +94,10 @@
 
   .app-shell__content {
     padding: 16px;
+  }
+
+  .app-shell__account-info,
+  .app-shell__account-arrow {
+    display: none;
   }
 }
