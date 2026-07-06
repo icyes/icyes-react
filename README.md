@@ -15,10 +15,21 @@
 
 ## 本地开发
 
+先启动同级目录中的认证服务（默认监听 `3000` 端口）：
+
+```bash
+cd ../icecred-node
+pnpm start:dev
+```
+
+再启动前端。开发服务器会把 `/api/*` 代理到认证服务：
+
 ```bash
 pnpm install
 pnpm dev
 ```
+
+如需连接其他环境，可在 `.env.local` 中配置 `VITE_API_BASE_URL`。
 
 常用脚本：
 

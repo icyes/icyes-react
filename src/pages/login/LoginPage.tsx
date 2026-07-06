@@ -4,19 +4,22 @@ import {
   EyeInvisibleOutlined,
   EyeOutlined,
   LockOutlined,
-  MailOutlined,
   SafetyCertificateFilled,
+  UserOutlined,
 } from '@ant-design/icons'
 import { Button, Checkbox, Form, Input, Typography, message } from 'antd'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+
+import { AuthApiError, login } from '@/features/auth/api'
+import { saveSession } from '@/features/auth/session'
 
 import './LoginPage.css'
 
 const { Link, Paragraph, Text, Title } = Typography
 
 type LoginValues = {
-  email: string
+  username: string
   password: string
   remember?: boolean
 }
@@ -26,12 +29,22 @@ export function LoginPage() {
   const [passwordVisible, setPasswordVisible] = useState(false)
   const navigate = useNavigate()
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (values: LoginValues) => {
     setSubmitting(true)
-    await new Promise((resolve) => window.setTimeout(resolve, 650))
-    setSubmitting(false)
-    void message.success('登录成功，欢迎回来')
-    void navigate('/')
+
+    try {
+      const session = await login({ username: values.username.trim(), password: values.password })
+      saveSession(session, values.remember ?? false)
+      void message.success(
+        `登录成功，欢迎回来${session.user.nickname ? `，${session.user.nickname}` : ''}`,
+      )
+      void navigate('/', { replace: true })
+    } catch (error) {
+      const errorMessage = error instanceof AuthApiError ? error.message : '登录失败，请稍后重试'
+      void message.error(errorMessage)
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   return (
@@ -96,22 +109,19 @@ export function LoginPage() {
             layout="vertical"
             requiredMark={false}
             initialValues={{ remember: true }}
-            onFinish={() => void handleSubmit()}
+            onFinish={(values) => void handleSubmit(values)}
             className="login-page__form"
           >
             <Form.Item
-              label="邮箱地址"
-              name="email"
-              rules={[
-                { required: true, message: '请输入邮箱地址' },
-                { type: 'email', message: '请输入有效的邮箱地址' },
-              ]}
+              label="账号"
+              name="username"
+              rules={[{ required: true, whitespace: true, message: '请输入账号' }]}
             >
               <Input
                 size="large"
-                prefix={<MailOutlined />}
-                placeholder="name@company.com"
-                autoComplete="email"
+                prefix={<UserOutlined />}
+                placeholder="用户名 / 邮箱 / 手机号"
+                autoComplete="username"
               />
             </Form.Item>
 

@@ -14,6 +14,9 @@ import type { MenuProps } from 'antd'
 import { useMemo, useState } from 'react'
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom'
 
+import { logout } from '@/features/auth/api'
+import { clearSession, getAccessToken, getStoredUser } from '@/features/auth/session'
+
 import './AppLayout.css'
 
 const { Header, Sider, Content } = Layout
@@ -66,6 +69,7 @@ export function AppLayout() {
   const screens = Grid.useBreakpoint()
   const location = useLocation()
   const navigate = useNavigate()
+  const currentUser = getStoredUser()
   const selectedKey = routeTitles.has(location.pathname) ? location.pathname : '/'
   const pageTitle = routeTitles.get(location.pathname) ?? '页面不存在'
   const isDesktop = screens.lg !== false
@@ -87,9 +91,14 @@ export function AppLayout() {
       return
     }
 
-    localStorage.removeItem('pulseops_token')
-    sessionStorage.removeItem('pulseops_token')
-    void navigate('/login', { replace: true })
+    const accessToken = getAccessToken()
+    void (async () => {
+      if (accessToken) {
+        await logout(accessToken)
+      }
+      clearSession()
+      void navigate('/login', { replace: true })
+    })()
   }
 
   return (
@@ -146,10 +155,14 @@ export function AppLayout() {
               trigger={['click']}
             >
               <Button type="text" className="app-shell__account" aria-label="打开账号菜单">
-                <Avatar className="app-shell__avatar">K</Avatar>
+                <Avatar className="app-shell__avatar" src={currentUser?.avatarUrl}>
+                  {(currentUser?.nickname ?? currentUser?.username ?? '管理员')
+                    .slice(0, 1)
+                    .toUpperCase()}
+                </Avatar>
                 <span className="app-shell__account-info">
-                  <Text strong>管理员</Text>
-                  <Text type="secondary">系统管理员</Text>
+                  <Text strong>{currentUser?.nickname ?? currentUser?.username ?? '管理员'}</Text>
+                  <Text type="secondary">{currentUser?.roles[0] ?? '系统管理员'}</Text>
                 </span>
                 <DownOutlined className="app-shell__account-arrow" />
               </Button>
